@@ -1,3 +1,6 @@
+# This is an example inventory, you will need to use
+# your own lab inventory with correct IPs and passwords
+# as the reference.
 [all:vars]
 ansible_user=student1
 ansible_ssh_pass=jdWNDQ4Uo7jJgi
