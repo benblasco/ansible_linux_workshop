@@ -1,0 +1,46 @@
+- hosts: all
+  name: Prepare all student machines with files to make the exercises easier
+  gather_facts: no
+  become: yes
+
+  vars:
+    ansible_files_path: ansible-files
+
+  tasks:
+    - name: Create directory for files
+      ansible.builtin.file:
+        path: "{{ ansible_files_path }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0755'
+
+    - name: Create subdirectories for files
+      ansible.builtin.file:
+        path: "{{ ansible_files_path }}/{{ item }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0755'
+      loop:
+        - files
+        - templates
+        - host_vars
+        - group_vars
+
+    - name: Copy the regular files we need
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: "{{ ansible_files_path }}/{{ item }}"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0644'
+      loop:
+        - files/dev_web.html
+        - files/httpd.conf
+        - host_vars/node2.yml
+        - files/prod_web.html
+        - files/web.html
+        - group_vars/web.yml
+        - templates/motd-facts.j2
+
